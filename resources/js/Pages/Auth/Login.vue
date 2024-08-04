@@ -4,6 +4,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import LinkButton from '@/Components/LinkButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
@@ -76,7 +77,7 @@ const submit = () => {
                 </label>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="block mt-4">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
@@ -84,6 +85,14 @@ const submit = () => {
                 >
                     Forgot your password?
                 </Link>
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                <LinkButton
+                    href="register"
+                >
+                    Register
+                </LinkButton>
 
                 <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Log in
