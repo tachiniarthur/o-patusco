@@ -9,7 +9,7 @@ import InputError from '@/Components/InputError.vue';
 import Select from '@/Components/Select.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { onMounted, provide, ref } from 'vue';
 
 const props = defineProps({
     schedules: {
@@ -28,18 +28,17 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    optionsAnimals: {
+        type: Array,
+        required: true,
+    },
 });
+
+provide('optionsAnimals', props.optionsAnimals);
 
 const dateInput = ref(null);
 const today = new Date().toISOString().split('T')[0];
-const typesAnimals = ref([
-    { id: 1, name: 'dog' },
-    { id: 2, name: 'cat' },
-    { id: 3, name: 'bird' },
-    { id: 4, name: 'fish' },
-    { id: 5, name: 'reptile' },
-    { id: 6, name: 'other' },
-]);
+const typesAnimals = ref(props.optionsAnimals);
 const typeInput = ref(null);
 
 const form = useForm({
@@ -48,12 +47,8 @@ const form = useForm({
 });
 
 const submitForm = () => {
-    let selectedType = typesAnimals.value.find(type => type.id === Number(form.type));
-    form.type = selectedType ? selectedType.name : form.type;
-    
     form.post(route('schedules.post'), {
         preserveScroll: true,
-        onSuccess: () => form.reset(),
     });
 };
 </script>

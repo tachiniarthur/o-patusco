@@ -3,7 +3,7 @@ import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 
 const props = defineProps({
     animals: {
@@ -13,19 +13,8 @@ const props = defineProps({
     },
 });
 
-const typesAnimals = ref([
-    { id: 1, name: 'dog' },
-    { id: 2, name: 'cat' },
-    { id: 3, name: 'bird' },
-    { id: 4, name: 'fish' },
-    { id: 5, name: 'reptile' },
-    { id: 6, name: 'other' },
-]);
-const sizeAnimals = ref([
-    { id: 1, name: 'small' },
-    { id: 2, name: 'medium' },
-    { id: 3, name: 'large' },
-]);
+const typesAnimals = ref(inject('optionsAnimals'));
+const sizeAnimals = ref(inject('optionsSizes'));
 
 const form = useForm({
     name: '',
@@ -43,12 +32,10 @@ const deleteAddAnimals = () => {
 
     form.name = props.animals.name;
     form.age = props.animals.age;
-    let typeAnimal = typesAnimals.value.find(type => type.name === String(props.animals.type));
-    form.type = String(typeAnimal.id);
+    form.type = props.animals.type;
     form.breed = props.animals.breed;
     form.weight = props.animals.weight;
-    let sizeAnimal = sizeAnimals.value.find(size => size.name === String(props.animals.size));
-    form.size = String(sizeAnimal.id);
+    form.size = props.animals.size;
 };
 
 const deleteAnimal = () => {

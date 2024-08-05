@@ -3,19 +3,14 @@ import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
 import Select from '@/Components/Select.vue';
 
 const confirmAddUser = ref(false);
-const roleOptions = ref([
-    { id: 1, name: 'admin' },
-    { id: 2, name: 'user' },
-    { id: 3, name: 'receptionist' },
-    { id: 4, name: 'doctor' },
-]);
+const roleOptions = ref(inject('optionsRoles'));
 const nameInput = ref(null);
 const emailInput = ref(null);
 const roleInput = ref(null);
@@ -35,9 +30,6 @@ const form = useForm({
 });
 
 const addUser = () => {
-    let selectedRole = roleOptions.value.find(role => role.id === Number(form.role));
-    form.role = selectedRole ? selectedRole.name : form.role;
-
     form.post(route('users.create'), {
         preserveScroll: true,
         onSuccess: () => closeModal(),

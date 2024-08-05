@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import ListUser from '@/Pages/Users/Partials/ListUser.vue';
 import AddUser from '@/Pages/Users/Partials/AddUser.vue';
+import { provide } from 'vue';
 
 const props = defineProps({
     users: {
@@ -13,7 +14,13 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    optionsRoles: {
+        type: Array,
+        required: true,
+    },
 });
+
+provide('optionsRoles', props.optionsRoles)
 </script>
 
 <template>

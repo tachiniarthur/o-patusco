@@ -6,7 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 import Select from '@/Components/Select.vue';
 
 const props = defineProps({
@@ -18,31 +18,18 @@ const props = defineProps({
 });
 
 const editAddAnimal = ref(false);
-const typesAnimals = ref([
-    { id: 1, name: 'dog' },
-    { id: 2, name: 'cat' },
-    { id: 3, name: 'bird' },
-    { id: 4, name: 'fish' },
-    { id: 5, name: 'reptile' },
-    { id: 6, name: 'other' },
-]);
-const sizeAnimals = ref([
-    { id: 1, name: 'small' },
-    { id: 2, name: 'medium' },
-    { id: 3, name: 'large' },
-]);
+const typesAnimals = ref(inject('optionsAnimals'));
+const sizeAnimals = ref(inject('optionsSizes'));
 
 const editAddAnimals = () => {
     editAddAnimal.value = true;
 
     form.name = props.animals.name;
     form.age = props.animals.age;
-    let typeAnimal = typesAnimals.value.find(type => type.name === String(props.animals.type));
-    form.type = String(typeAnimal.id);
+    form.type = props.animals.type;
     form.breed = props.animals.breed;
     form.weight = props.animals.weight;
-    let sizeAnimal = sizeAnimals.value.find(size => size.name === String(props.animals.size));
-    form.size = String(sizeAnimal.id);
+    form.size = props.animals.size;
 
 };
 
@@ -56,12 +43,6 @@ const form = useForm({
 });
 
 const editAnimal = () => {
-    let selectedType = typesAnimals.value.find(type => type.id === Number(form.type));
-    form.type = selectedType ? selectedType.name : form.type;
-
-    let selectedSize = sizeAnimals.value.find(size => size.id === Number(form.size));
-    form.size = selectedSize ? selectedSize.name : form.size;
-
     form.put(route('animals.update', props.animals.id), {
         preserveScroll: true,
         onSuccess: () => closeModal(),

@@ -21,7 +21,7 @@ const props = defineProps({
 
 const confirmAddDoctor = ref(false);
 const doctorIdInput = ref(null);
-const doctorsOptions = ref([]);
+const doctorsOptions = ref(props.doctors);
 
 const confirmAddDoctors = () => {
     confirmAddDoctor.value = true;
@@ -32,8 +32,6 @@ const form = useForm({
 });
 
 onMounted(() => {
-    doctorsOptions.value = props.doctors;
-
     if (props.schedules.doctor != null) {
         form.doctor_id = String(props.schedules.doctor.id);
     }

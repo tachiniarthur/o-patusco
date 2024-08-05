@@ -6,23 +6,12 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
 import Select from '@/Components/Select.vue';
 
 const confirmAddAnimal = ref(false);
-const typesAnimals = ref([
-    { id: 1, name: 'dog' },
-    { id: 2, name: 'cat' },
-    { id: 3, name: 'bird' },
-    { id: 4, name: 'fish' },
-    { id: 5, name: 'reptile' },
-    { id: 6, name: 'other' },
-]);
-const sizeAnimals = ref([
-    { id: 1, name: 'small' },
-    { id: 2, name: 'medium' },
-    { id: 3, name: 'large' },
-]);
+const typesAnimals = ref(inject('optionsAnimals'));
+const sizeAnimals = ref(inject('optionsSizes'));
 const nameInput = ref(null);
 const ageInput = ref(null);
 const typeInput = ref(null);
@@ -44,12 +33,6 @@ const form = useForm({
 });
 
 const addAnimal = () => {
-    let selectedType = typesAnimals.value.find(type => type.id === Number(form.type));
-    form.type = selectedType ? selectedType.name : form.type;
-
-    let selectedSize = sizeAnimals.value.find(size => size.id === Number(form.size));
-    form.size = selectedSize ? selectedSize.name : form.size;
-
     form.post(route('animals.create'), {
         preserveScroll: true,
         onSuccess: () => closeModal(),

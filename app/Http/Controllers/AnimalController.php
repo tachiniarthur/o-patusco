@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ConstHelpers;
 use App\Http\Requests\AnimalCreateRequest;
 use App\Models\Animal;
 use Illuminate\Http\Request;
@@ -26,10 +27,14 @@ class AnimalController extends Controller
             $animals = $this->animal->where('user_id', auth()->id())->get();
         }
 
+        $optionsAnimals = ConstHelpers::OPTIONS_ANIMALS_TYPE;
+        $optionsSizes = ConstHelpers::OPTIONS_ANIMALS_SIZES;
 
         return Inertia::render('Animals/Index', [
             'animals' => $animals,
-            'userAuth' => $userAuth
+            'userAuth' => $userAuth,
+            'optionsAnimals' => $optionsAnimals,
+            'optionsSizes' => $optionsSizes
         ]);
     }
 

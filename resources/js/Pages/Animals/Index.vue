@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import ListAnimals from '@/Pages/Animals/Partials/ListAnimals.vue';
 import AddAnimal from '@/Pages/Animals/Partials/AddAnimal.vue';
+import { provide } from 'vue';
 
 const props = defineProps({
     animals: {
@@ -13,7 +14,18 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    optionsAnimals: {
+        type: Array,
+        required: true,
+    },
+    optionsSizes: {
+        type: Array,
+        required: true,
+    },
 });
+
+provide('optionsAnimals', props.optionsAnimals)
+provide('optionsSizes', props.optionsSizes)
 </script>
 
 <template>

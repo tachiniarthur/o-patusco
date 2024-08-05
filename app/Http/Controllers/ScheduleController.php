@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ConstHelpers;
 use App\Http\Requests\ScheduleCreateRequest;
 use App\Models\Animal;
 use App\Models\Schedule;
@@ -14,43 +15,49 @@ class ScheduleController extends Controller
     public function __construct(
         private Schedule $schedule,
         private User $user,
-        private Animal $animal
+        private Animal $animal,
     ) {
         
     }
+
     public function index(Request $request)
     {
-        dd($request->all());
+        $query = $this->schedule->query();
+
+        if ($request->date) {
+            $query->where('date', $request->date);
+        }
+
+        if ($request->type) {
+            $query->whereHas('animal', function ($query) use ($request) {
+                $query->where('type', $request->type);
+            });
+        }
+
         $userAuth = auth()->user();
 
-        $schedules = [];
         $doctors = [];
         $animals = [];
         if ($userAuth->role == 'receptionist' || $userAuth->role == 'admin') {
-            $schedules = $this->schedule
-                ->with('animal', 'doctor')
-                ->get();            
+            $schedules = $query->with('animal', 'doctor')->get();
             $doctors = $this->user->where('role', 'doctor')->get();
             $animals = $this->animal->all();
         } else if ($userAuth->role == 'doctor') {
-            $schedules = $this->schedule
-                ->where('doctor_id', auth()->id())
-                ->with('animal', 'doctor')
-                ->get();
+            $schedules = $query->where('doctor_id', auth()->id())->with('animal', 'doctor')->get();
             $animals = $this->animal->all();
         } else {
-            $schedules = $this->schedule
-                ->where('user_id', auth()->id())
-                ->with('animal', 'doctor')
-                ->get();
+            $schedules = $query->where('user_id', auth()->id())->with('animal', 'doctor')->get();
             $animals = auth()->user()->animalsOptions;
         }
+
+        $optionsAnimals = ConstHelpers::OPTIONS_ANIMALS_TYPE;
 
         return Inertia::render('Schedules/Index', [
             'schedules' => $schedules,
             'animals' => $animals,
             'doctors' => $doctors,
             'userAuth' => $userAuth,
+            'optionsAnimals' => $optionsAnimals
         ]);
     }
 

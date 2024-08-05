@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ConstHelpers;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
@@ -22,9 +23,12 @@ class UserController extends Controller
     {
         $userAuth = auth()->user();
 
+        $optionsRoles = ConstHelpers::OPTIONS_ROLES;
+
         return Inertia::render('Users/Index', [
             'users' => User::all(),
             'userAuth' => $userAuth,
+            'optionsRoles' => $optionsRoles
         ]);
     }
 

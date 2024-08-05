@@ -3,7 +3,7 @@ import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
@@ -17,12 +17,7 @@ const props = defineProps({
 });
 
 const editAddUser = ref(false);
-const roleOptions = ref([
-    { id: 1, name: 'admin' },
-    { id: 2, name: 'user' },
-    { id: 3, name: 'receptionist' },
-    { id: 4, name: 'doctor' },
-]);
+const roleOptions = ref(inject('optionsRoles'));
 const nameInput = ref(null);
 const emailInput = ref(null);
 const roleInput = ref(null);
@@ -34,8 +29,7 @@ const editAddUsers = () => {
 
     form.name = props.users.name;
     form.email = props.users.email;
-    let roleUser = roleOptions.value.find(role => role.name === String(props.users.role));
-    form.role = String(roleUser.id);
+    form.role = props.users.role;
 };
 
 const form = useForm({
@@ -47,9 +41,6 @@ const form = useForm({
 });
 
 const editUser = () => {
-    let selectedRole = roleOptions.value.find(role => role.id === Number(form.role));
-    form.role = selectedRole ? selectedRole.name : form.role;
-
     form.put(route('users.update', props.users.id), {
         preserveScroll: true,
         onSuccess: () => closeModal(),

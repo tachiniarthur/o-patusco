@@ -3,7 +3,7 @@ import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
@@ -21,12 +21,8 @@ const props = defineProps({
 });
 
 const editAddSchedule = ref(false);
-const animalsOptions = ref([]);
+const animalsOptions = ref(props.animals);
 const today = new Date().toISOString().split('T')[0];
-
-onMounted(() => {
-    animalsOptions.value = props.animals;
-});
 
 const editAddSchedules = () => {
     editAddSchedule.value = true;
